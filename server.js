@@ -19,6 +19,15 @@ var exphbs = require("express-handlebars");
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
+mongoose.connect("mongodb://localhost/Article-Scraper");
+
+var db = mongoose.connection;
+
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function(){
+  console.log("Connected To Mongoose!");
+});
+
 app.listen(PORT, function() {
     console.log("App now listening at localhost:" + PORT);
   });
