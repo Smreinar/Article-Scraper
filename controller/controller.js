@@ -18,7 +18,7 @@ router.get("/scrape", function(req, res){
         var $ = cheerio.load(res.data);
         var titlesArray = [];
         $("div.fg-item").each(function(i, element){
-            var title =$(element).text();
+            var title =$(element).find("h2").text();
             var link = $(element).children().attr("href");
             titlesArray.push({
                 title: title,
