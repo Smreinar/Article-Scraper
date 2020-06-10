@@ -24,7 +24,22 @@ router.get("/scrape", function(req, res){
                 title: title,
                 link: link
             });
+            Article.count({title:titlesArray}, function(err,test){
+                if(test === 0){
+                    var newArticle = new Article(titlesArray)
+                    newArticle.save(function(err, doc){
+                        if (err){
+                            console.log(err);
+                        }
+                        else{
+                            
+                            console.log(doc)
+                        }
+                    })
+                }
+            })
         });
+
         console.log(titlesArray)
     }).catch(function(err){
       console.log(err)
