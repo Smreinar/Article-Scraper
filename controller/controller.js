@@ -24,26 +24,38 @@ router.get("/scrape", function(req, res){
                 title: title,
                 link: link
             });
-            Article.count({title:titlesArray}, function(err,test){
+            Article.count({title:title}, function(err,test){
                 if(test === 0){
-                    var newArticle = new Article(titlesArray)
+                    var newArticle = new Article({title:title, link:link})
                     newArticle.save(function(err, doc){
-                        if (err){
-                            console.log(err);
-                        }
-                        else{
-                            
-                            console.log(doc)
-                        }
+                        if (err) return console.error(err);
+                        console.log("Document inserted succussfully!");
                     })
                 }
             })
+            console.log(titlesArray)
         });
 
-        console.log(titlesArray)
+        // console.log(titlesArray)
     }).catch(function(err){
       console.log(err)
     })
 });
+
+router.get("/articles", function(req, res){
+    
+    Article.find().lean().sort({_id:-1}).exec(function(err,found){
+        console.log(found)
+        if (err){
+            
+            console.log(err)
+        }
+        else{
+            var articl = { article: found}
+            
+            res.render("index", articl);
+        }
+    }
+)})
 
 module.exports = router
