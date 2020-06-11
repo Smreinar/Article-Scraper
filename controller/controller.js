@@ -9,7 +9,9 @@ var cheerio = require("cheerio");
 var Comment = require("../models/Comment.js");
 var Article = require("../models/Article.js");
 
+//Route GET '/' 
 router.get("/", function(req, res){
+    //use res.redirect() to go to route '/articles'
     res.redirect("/articles");
 })
 
@@ -20,7 +22,7 @@ router.get("/scrape", function(req, res){
         //declare Variables for cheerio and an empty array
         var $ = cheerio.load(res.data);
         var titlesArray = [];
-        //Using jQuery to scope.
+        //Using cheerio to scope.
         $("article").each(function(i, element){
             //Declare Variables for Title and Link scoped to each article 
             var title =$(element).find("span.entry-title-primary").text();
@@ -90,5 +92,65 @@ router.get("/articles-json", function(req, res){
     });
 
 });
+
+//Route GET '/clearAll'
+router.get("/clealAll", function(req, res){
+    //call to Article and use .remove({}) 
+    Article.remove({}, function(err, found){
+        //If Error Log Error
+        if (err){
+            console.log(err);
+        }
+        //if no errors then Log a message
+        else{
+           console.log("Removed All Articles!");
+        }
+    });
+    //redirect to '/article-json'
+    res.redirect("/articles-json");
+});
+
+//Route GET '/readArticle/:id'
+router.get("/readArticle/:id", function(req, res){
+    var articleId = req.params.id;
+    var hbsObj ={
+        article: [],
+        body: []
+    }
+    Article.findOne({_id:articleId})
+    .populate("comment").then(function(found){
+       
+            hbsObj = found
+            var link = found.link
+            console.log(link)
+            axios.get(link).then(function(res){
+                var $ = cheerio.load(res);
+                var articalArray = []
+                
+
+                // $(".article").each(function(i, element){
+                //     console.log("************unicorn***************")
+                //     var title =$(element).children().text();
+                //     var body =$(element).find("a").find("img").attr("img")
+                //     console.log("BODY:",body)
+                //     console.log("TITLE:",title)
+                //     articalArray.push({
+                //         title:title,
+                //         body:body
+                //     })
+                    
+                // })
+                console.log(articalArray)
+                
+            })
+        
+    }).catch(function(err){
+        console.log(err);
+      });
+})
+
+
+
+
 
 module.exports = router
