@@ -113,32 +113,35 @@ router.get("/clealAll", function(req, res){
 //Route GET '/readArticle/:id'
 router.get("/readArticle/:id", function(req, res){
     var articleId = req.params.id;
-    // var hbsObj ={
-    //     article: [],
-    //     body: []
-    // }
+
     Article.findOne({_id:articleId})
     .populate("comment").then(function(found){
        // declarying title & link
-            hbsObj = found.title
-            var link = found.link
-            console.log("link:",link)
-            console.log("Title:",hbsObj)
+            // hbsObj = found.title;
+            var link = found.link;
+            
+            //*TEST*
+            // console.log("link:",link)
+            // console.log("Title:",hbsObj)
 
             //axios call with link
             axios.get(link).then(function(res){
                 var $ = cheerio.load(res.data);
-                var fullArticalArray = []
+                var fullArticalArray = [];
                
                 
                 $("article").each(function(i, element){
                     
-                    //Setting & Grabbing title, title summary, top image and article body text.    
+                    //Setting & Grabbing title, title summary, date, top image and article body text.    
                     
                     //Title Text            
                     var title =$(element).find("span.entry-title-primary").text();
                     //Title summary Text
                     var titleSum =$(element).find("span.entry-subtitle").text();
+                    //Link
+                    var link =$(element).find("a").attr("href")
+                    //Date 
+                    var date =$(element).find("a").find("time.entry-date").text();
                     //Image
                     var image =$(element).find("img").attr("src");
                     //Body Text
@@ -148,15 +151,32 @@ router.get("/readArticle/:id", function(req, res){
                     fullArticalArray.push({
                         title:title,
                         titleSum:titleSum,
+                        link:link,
+                        date:date,
                         image:image,
                         body:body
-                    })
-                    
-                })
-                //*TEST*
-                console.log(articalArray)
+                    });
+                    Article.count({body:body}, function(err,test){
+                    //if body count is 0 then it does not exsist 
+                    if(test === 0){
+                    //If true make a new article 
+                    var newArticle = new Article({title:title, titleSum:titleSum, link:link, date:date, image:image, body:body,})
+                    //Then save new Article to database 
+                    newArticle.save(function(err, doc){
+                        if (err) return console.error(err);
+                        console.log("Document inserted succussfully!");
+                    });
+                }
+            });
+            
+    
+                });
                 
-            })
+                //*TEST*
+                console.log(fullArticalArray)
+                
+            });
+        res.render("article",found);
      //Catch & Log Errors   
     }).catch(function(err){
         console.log(err);
