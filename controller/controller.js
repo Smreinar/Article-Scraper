@@ -113,37 +113,51 @@ router.get("/clealAll", function(req, res){
 //Route GET '/readArticle/:id'
 router.get("/readArticle/:id", function(req, res){
     var articleId = req.params.id;
-    var hbsObj ={
-        article: [],
-        body: []
-    }
+    // var hbsObj ={
+    //     article: [],
+    //     body: []
+    // }
     Article.findOne({_id:articleId})
     .populate("comment").then(function(found){
-       
-            hbsObj = found
+       // declarying title & link
+            hbsObj = found.title
             var link = found.link
-            console.log(link)
-            axios.get(link).then(function(res){
-                var $ = cheerio.load(res);
-                var articalArray = []
-                
+            console.log("link:",link)
+            console.log("Title:",hbsObj)
 
-                // $(".article").each(function(i, element){
-                //     console.log("************unicorn***************")
-                //     var title =$(element).children().text();
-                //     var body =$(element).find("a").find("img").attr("img")
-                //     console.log("BODY:",body)
-                //     console.log("TITLE:",title)
-                //     articalArray.push({
-                //         title:title,
-                //         body:body
-                //     })
+            //axios call with link
+            axios.get(link).then(function(res){
+                var $ = cheerio.load(res.data);
+                var fullArticalArray = []
+               
+                
+                $("article").each(function(i, element){
                     
-                // })
+                    //Setting & Grabbing title, title summary, top image and article body text.    
+                    
+                    //Title Text            
+                    var title =$(element).find("span.entry-title-primary").text();
+                    //Title summary Text
+                    var titleSum =$(element).find("span.entry-subtitle").text();
+                    //Image
+                    var image =$(element).find("img").attr("src");
+                    //Body Text
+                    var body =$(element).find("p").text().trim();
+                    
+                    //then push all vars to empty array
+                    fullArticalArray.push({
+                        title:title,
+                        titleSum:titleSum,
+                        image:image,
+                        body:body
+                    })
+                    
+                })
+                //*TEST*
                 console.log(articalArray)
                 
             })
-        
+     //Catch & Log Errors   
     }).catch(function(err){
         console.log(err);
       });
