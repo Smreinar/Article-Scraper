@@ -1,6 +1,7 @@
 //requires 
 var mongoose = require("mongoose");
 var express = require("express");
+
 //setting vars
 var PORT = process.env.PORT || 3000;
 
@@ -18,6 +19,9 @@ var exphbs = require("express-handlebars");
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
+
+var routes = require("./controller/controller.js")
+app.use(routes)
 
 mongoose.connect("mongodb://localhost/Article-Scraper");
 

@@ -26,18 +26,24 @@ router.get("/scrape", function(req, res){
         $("article").each(function(i, element){
             //Declare Variables for Title and Link scoped to each article 
             var title =$(element).find("span.entry-title-primary").text();
+            var titleSum =$(element).find("span.entry-subtitle").text().trim();
             var link = $(element).children().attr("href");
+            var image =$(element).find("img").attr("src");
+            var  body = ""
             //Make a Push to the emptry array with title and link with values 
             titlesArray.push({
                 title: title,
-                link: link
+                link: link,
+                titleSum: titleSum,
+                image:image,
+                body:body
             });
             //calling Article .count() with title 
             Article.count({title:title}, function(err,test){
                 //if title count is 0 then it does not exsist 
                 if(test === 0){
                     //If true make a new article 
-                    var newArticle = new Article({title:title, link:link})
+                    var newArticle = new Article({title:title, link:link, titleSum:titleSum, image:image, body:body})
                     //Then save new Article to database 
                     newArticle.save(function(err, doc){
                         if (err) return console.error(err);
@@ -58,7 +64,7 @@ router.get("/scrape", function(req, res){
 //Route GET '/articles'
 router.get("/articles", function(req, res){
     //Find all articles and sort by id
-    Article.find().lean().sort({_id:-1}).exec(function(err,found){
+    Article.find({saved:false}).lean().sort({_id:-1}).exec(function(err,found){
         // console.log(found);
 
         //if err log err
@@ -72,6 +78,26 @@ router.get("/articles", function(req, res){
             var articl = { article: found}
             
             res.render("index", articl);
+        }
+    }
+)});
+
+router.get("/savedArticles", function(req, res){
+    //Find all articles and sort by id
+    Article.find({saved:true}).lean().sort({_id:-1}).exec(function(err,found){
+        // console.log(found);
+
+        //if err log err
+        if (err){
+            
+            console.log(err);
+        }
+        //otherwise use res.render() to 'index'
+        else{
+            //set variable to render 'found'
+            var articl = { savedArticles: found}
+            
+            res.render("saved", articl);
         }
     }
 )});
@@ -94,7 +120,7 @@ router.get("/articles-json", function(req, res){
 });
 
 //Route GET '/clearAll'
-router.get("/clealAll", function(req, res){
+router.get("/clearAll", function(req, res){
     //call to Article and use .remove({}) 
     Article.remove({}, function(err, found){
         //If Error Log Error
@@ -109,80 +135,111 @@ router.get("/clealAll", function(req, res){
     //redirect to '/article-json'
     res.redirect("/articles-json");
 });
+router.delete("/api/articles/:id", function(req, res){
+    var id = req.params.id;
+    //call to Article and use .remove({}) 
+    Article.remove({_id: id}, function(err, found){
+        //If Error Log Error
+        if (err){
+            console.log(err);
+        }
+        //if no errors then Log a message
+        else{
+           console.log("Removed All Articles!");
+    
+        }
+        res.json(found);
+    });
+    //redirect to '/article-json'
+
+});
 
 //Route GET '/readArticle/:id'
 router.get("/readArticle/:id", function(req, res){
     var articleId = req.params.id;
 
     Article.findOne({_id:articleId})
-    .populate("comment").then(function(found){
+    .populate("Comment").then(function(dbArticle){
        // declarying title & link
             // hbsObj = found.title;
-            var link = found.link;
+            var link = dbArticle.link;
+            var id = dbArticle.id
             
-            //*TEST*
-            // console.log("link:",link)
-            // console.log("Title:",hbsObj)
 
-            //axios call with link
-            axios.get(link).then(function(res){
-                var $ = cheerio.load(res.data);
-                var fullArticalArray = [];
-               
-                
-                $("article").each(function(i, element){
-                    
-                    //Setting & Grabbing title, title summary, date, top image and article body text.    
-                    
-                    //Title Text            
-                    var title =$(element).find("span.entry-title-primary").text();
-                    //Title summary Text
-                    var titleSum =$(element).find("span.entry-subtitle").text();
-                    //Link
-                    var link =$(element).find("a").attr("href")
-                    //Date 
-                    var date =$(element).find("a").find("time.entry-date").text();
-                    //Image
-                    var image =$(element).find("img").attr("src");
-                    //Body Text
-                    var body =$(element).find("p").text().trim();
-                    
-                    //then push all vars to empty array
-                    fullArticalArray.push({
-                        title:title,
-                        titleSum:titleSum,
-                        link:link,
-                        date:date,
-                        image:image,
-                        body:body
-                    });
-                    Article.count({body:body}, function(err,test){
-                    //if body count is 0 then it does not exsist 
-                    if(test === 0){
-                    //If true make a new article 
-                    var newArticle = new Article({title:title, titleSum:titleSum, link:link, date:date, image:image, body:body,})
-                    //Then save new Article to database 
-                    newArticle.save(function(err, doc){
-                        if (err) return console.error(err);
-                        console.log("Document inserted succussfully!");
-                    });
-                }
-            });
-            
-    
-                });
-                
-                //*TEST*
-                console.log(fullArticalArray)
-                
-            });
-        res.render("article",found);
+            console.log("WOOOOT",dbArticle);
+        res.render("article", {comment:dbArticle});
      //Catch & Log Errors   
     }).catch(function(err){
         console.log(err);
-      });
-})
+    });
+});
 
+router.put("/api/articles/:id",function(req, res){
+    var id = req.params.id;
+    Article.update({_id: id},{saved: true}).then(function(results){
+        res.json(results);
+    })
+})
+//Route
+router.post("/comment/:id",function(req, res){
+    var userName = req.body.userName;
+    var body = req.body.comBody;
+    var id = req.params.id;
+    console.log("UserName",userName,"body:",body)
+    console.log(id);
+
+    Comment.create(req.body).then(function(dbcomment){
+        return Article.findOneAndUpdate({_id: req.params.id},{$push:{ comment: dbcomment._id}},{new: true});
+    }).then(function(dbArticle){
+        console.log(dbArticle);
+        Article.findOne({_id:req.params.id})
+        .populate("comment").then(function(dbArticle){
+           // declarying title & link
+             
+    
+                console.log("WOOOOT",dbArticle);
+
+                var newComment = dbArticle.comment.map(comment=>{
+                    return {
+                        _id: comment._id,
+                        userName: comment.userName,
+                        comBody: comment.comBody
+                    }
+                })
+                console.log('UNICORN',newComment)
+            res.render("article", {comment:newComment});
+         //Catch & Log Errors   
+        }).catch(function(err){
+            console.log(err);
+        });
+        
+    }).catch(function(err){
+       res.json(err);
+    })
+
+    // var newComment = new Comment({username:username,body:body});
+
+    // newComment.save(function(err, doc){
+    //     console.log(doc)
+    //     if (err) return console.error(err);
+    //     console.log("Document inserted succussfully!");
+
+    //     Article.findOneAndUpdate(
+    //         {_id: req.params.id},
+    //         {$push:{ comment:}},
+    //         {new: true}
+    //     ).exec(function(err, doc){
+    //         if(err){
+    //             console.log(err);
+    //         }
+    //         else{
+    //             res.redirect("/readArticle/"+ articleId);
+    //         }
+    //     });
+    // });
+
+
+});
 
 
 

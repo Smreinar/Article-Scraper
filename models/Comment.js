@@ -2,13 +2,17 @@ var mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
 var CommentSchema = new Schema({
-    name: {
-        type: String,
-    },
-    body: {
+    
+    userName: {
         type: String,
         required: true
     },
+    comBody: {
+        type: String,
+        required: true
+    }
+
+    
 
 });
 

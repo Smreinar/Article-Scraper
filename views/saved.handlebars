@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col s2">
+        <div class="col s8 left-align">
+            {{#each savedArticles}}
+            <div class="card-panel">
+                <img class="cardImage" src="{{image}}"/>
+                <h4>{{this.title}}</h4>
+                
+                <a  class="waves-effect waves-light btn" id="btnSignUp">Read Article</a>
+                <p>{{titleSum}}</p>
+                <button class="deleteArtBut" data-id="{{_id}}">Delete</button>
+                
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</div>

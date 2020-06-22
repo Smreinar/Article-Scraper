@@ -1,0 +1,42 @@
+<div class="row">
+    {{!-- <h3>{{this.title}}</h3>
+    <img class="cardImage" src="{{this.image}}"/>
+    <h4>{{this.link}}<h4>
+    <h5><strong>{{this.titleSum}}</stong></h5>
+    <h5>{{this.body}}</h5> --}}
+</div>
+<div class="container">
+<form id="commentForm">
+    <h4>Comment On This Article Below
+  <div class="form-group">
+    <label for="userText">User Name</label>
+    <input type="text" id="userText" class="form-control" name="username" placeholder="User Name">
+  </div>
+  <div class="form-group">
+    <label for="commentText">Comment</label>
+    <textarea class="form-control" id="commentText" placeholder="Enter Comment" rows="3"></textarea>
+  </div>
+  <button id='comSubBut' type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+
+<div class="row">
+    <div class="col s2"></div>
+    <div class="col s8">
+        <h5>Comments:</h5>
+        {{!-- *****Needs Attention***** --}}
+        {{#each comment}}
+        
+        {{!-- Still having an issue with using .populate() right, supposed to go through each comment and bring back the userName and comBody that belongs to that comment but isnt rendering right? --}}
+        <p>-----</p>
+        <div class="commentDiv">
+            <p id="nameComment">User:{{comment.userName}}</p>
+            <p>Comment:{{comment.comBody}}</p>
+        </div>
+        
+        
+        
+        
+        {{/each}}
+    </div>
+</div>
