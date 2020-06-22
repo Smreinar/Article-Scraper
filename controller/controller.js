@@ -51,14 +51,16 @@ router.get("/scrape", function(req, res){
                     });
                 }
             });
-            
+         
         });
+        
 
         // console.log(titlesArray)
     //catch errors
     }).catch(function(err){
       console.log(err);
     });
+    res.redirect("/")
 });
 
 //Route GET '/articles'

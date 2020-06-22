@@ -1,0 +1,21 @@
+#body {
+    background-color: lightslategray;
+    padding-top: 100px;
+    padding-bottom: 50px;
+}
+
+.container {
+    background-color: lightblue;
+}
+
+
+
+#break-Line {
+    border-top: 1px solid black;
+    
+}
+
+#articleImageGet {
+    height: 200px;
+}
+

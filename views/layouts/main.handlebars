@@ -6,14 +6,46 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<!-- Custom CSS -->
-		<link rel="stylesheet" href="/css/stylesheet.css" type="text/html">
+		<link rel="stylesheet" href="/css/stylesheet.css">
 	
 		<!-- Bootstap CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		
 	</head>
-    	 {{nav/navbar}} 
-	<body>
+<nav class="navbar navbar-expand-lg navbar-primary fixed-top bg-dark">
+  <a class="navbar-brand" href="/">ArticleScraper</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+ <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	 <ul class="navbar-nav mr-3">
+		<li class="nav-item active">
+    		<a class="nav-item nav-link active" href="/" id="homePageBut">Home<span class="sr-only">(current)</span></a>
+    	</li>
+		<li class="nav-item">
+			<a class="nav-item nav-link" href="/savedArticles" id="scrapeBut">Saved Articles</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-item nav-link" href="/scrape" id="scrapeBut">Scrape</a>
+		</li>
+    </ul>
+  </div>
+</nav>
+
+
+{{!-- <div class="navbar navbar-expand-xl navbar-light bg-light">
+    <a id="homePageBut" href="/" class="navbar-brand">Home</a>
+
+    <div class="collapse navbar-collapse">
+		<ul class="">
+        	<li class="nav-item">
+				<a class="nav-link" href="/scrape" id="scrapeBut">Scrape</a>
+
+			</li>
+    	</ul>
+	</div>
+</div> --}}
+	<body id="body">
         <div class="container">
 		    {{{ body }}}
         </div>

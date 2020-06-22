@@ -1,16 +1,19 @@
-<div class="row">
+<div class="row" id="articleGet">
     <div class="col s2">
         <div class="col s8 left-align">
             {{#each article}}
             <div class="card-panel">
-                <img class="cardImage" src="{{image}}"/>
                 <h4>{{this.title}}</h4>
-                
-                <a href="/readArticle/{{this._id}}" class="waves-effect waves-light btn" id="btnSignUp">Read Article</a>
-                <p>{{titleSum}}</p>
-                <button class="saveArtBut" data-id="{{_id}}">Save</button>
+                <img class="cardImage" id="articleImageGet" src="{{image}}"/>
+                <p id="articleTSumGet">{{titleSum}}</p>
+                <a href="{{link}}" class="articleLinkH btn btn-primary">Read About</a>
+                <a href="/readArticle/{{this._id}}" class="btn btn-info" id="btnSignUp">Comment</a>
+
+                <button class="saveArtBut btn btn-success" data-id="{{_id}}">Save</button>
                 
             </div>
+            <br>
+            <hr id="break-Line">
             {{/each}}
         </div>
     </div>

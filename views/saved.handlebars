@@ -1,17 +1,16 @@
+
 <div class="row">
-    <div class="col s2">
-        <div class="col s8 left-align">
-            {{#each savedArticles}}
-            <div class="card-panel">
-                <img class="cardImage" src="{{image}}"/>
-                <h4>{{this.title}}</h4>
-                
-                <a  class="waves-effect waves-light btn" id="btnSignUp">Read Article</a>
-                <p>{{titleSum}}</p>
-                <button class="deleteArtBut" data-id="{{_id}}">Delete</button>
-                
-            </div>
-            {{/each}}
-        </div>
-    </div>
+    {{#each savedArticles}}
+<div class="card mx-auto" style="width: 25rem;">
+    
+    <img class="card-img-top" src="{{image}}" alt="Card image cap">
+    <div class="card-body">
+        <h5 class="card-title">{{title}}</h5>
+        <p class="card-text">{{titleSum}}</p>
+        <a href="{{link}}" class="btn btn-primary">Read About</a>
+        <a href="/readArticle/{{_id}}" class="btn btn-success" id="btnSignUp">Comment</a>
+        <button class="deleteArtBut btn btn-danger" data-id="{{_id}}">Delete</button>
+  </div>
+  {{/each}}
+</div>
 </div>
