@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Set Handlebars.
-var exphbs = require("express-handlebars");
+var exphbs = require("express-handlebars");   
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
@@ -23,14 +23,8 @@ app.set("view engine", "handlebars");
 var routes = require("./controller/controller.js")
 app.use(routes)
 
-mongoose.connect("mongodb://localhost/Article-Scraper");
-
-var db = mongoose.connection;
-
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", function(){
-  console.log("Connected To Mongoose!");
-});
+mongoose.connect(process.env.MONGODB_URI ||   "mongodb://localhost/Article-Scraper");
+ 
 
 app.listen(PORT, function() {
     console.log("App now listening at localhost:" + PORT);
