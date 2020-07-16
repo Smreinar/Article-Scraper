@@ -23,18 +23,19 @@ Then you will run the following command in terminal
 
 ---
 
-## Usage
-    - mongoose
-    - cheerio
-    - axios
-    - express
-    - handlebars
-    - express-handlebars
+## Technologies
+- mongoose
+- cheerio
+- axios
+- express
+- handlebars
+- express-handlebars
 
 ---
 
+
 ## License
-    MT
+MT
 
 ---
 
