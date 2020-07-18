@@ -38,6 +38,8 @@ Then you will run the following command in terminal
 
 ## Code Snippets
 
+![article-scraper-mongoose-aticle-schema](https://user-images.githubusercontent.com/57015344/87861341-32ed1980-c8fa-11ea-9c73-3020115276c2.png)
+
 
 ---
 
