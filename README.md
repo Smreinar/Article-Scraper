@@ -24,15 +24,22 @@ Then you will run the following command in terminal
 ---
 
 ## Technologies
-- mongoose
-- cheerio
-- axios
-- express
-- handlebars
-- express-handlebars
+- HTML5
+- CSS
+- Mongoose
+- Cheerio
+- Axios
+- jQuery
+- Express
+- Handlebars
+- - express-handlebars
 
 ---
 
+## Code Snippets
+
+
+---
 
 ## License
 MT
