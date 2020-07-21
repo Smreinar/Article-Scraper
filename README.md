@@ -10,6 +10,8 @@ You can also check out your saved Articles by clicking on saved Articles and fro
 
 Have Fun and Enjoy!  
 
+[Live App](https://article-scraper1021.herokuapp.com/articles)
+
 ---
 
 ## Install
